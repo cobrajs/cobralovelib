@@ -56,7 +56,7 @@ All the functions that didn't fit other places. There is basic documentation abo
 vector.lua
 ------------
 
-Just your average 2D (x,y) vector lib. Has all the basic stuff... still need to add reflections, though.
+Just your average 2D (x,y) vector lib. Has all the basic stuff...
 
 xml.lua
 ------------

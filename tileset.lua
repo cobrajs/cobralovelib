@@ -3,8 +3,6 @@ module(..., package.seeall)
 require 'utils'
 require 'xml'
 
---assert(type(love) == 'table', 'Tileset only supports Love2D')
-
 --
 -- Inputs:
 --    image : Already loaded image from love
@@ -32,7 +30,7 @@ function Tileset(image, xtiles, ytiles)
       ))
     end
   end
-  --return setmetatable(a, Tileset)
+
   --
   -- Inputs: 
   --    X : X position of where to draw

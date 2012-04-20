@@ -63,7 +63,7 @@ end
 --
 -- XML Parsing Stuff
 --
-
+-- LoadXML from http://lua-users.org/wiki/LuaXml
 function LoadXML(s)
   local function LoadXML_parseargs(s)
     local arg = {}

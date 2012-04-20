@@ -72,3 +72,24 @@ function Vector:perp()
   self.x, self.y = -self.y, self.x
 end
 
+function Vector:reverse()
+  self.x, self.y = -self.x, -self.y;
+end
+
+function Vector:dot(b)
+  return self.x * b.x + self.y * b.y
+end
+
+function Vector:abs()
+  self.x, self.y = math.abs(self.x), math.abs(self.y)
+end
+
+function Vector:reflect(w) 
+  w:perp()
+  w:norm()
+  w:print()
+  w = w * 2 * self:dot(w)
+  w:print()
+  self.x = self.x - w.x
+  self.y = self.y - w.y
+end
