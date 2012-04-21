@@ -6,38 +6,71 @@ require 'xml'
 require 'utils'
 require 'loader'
 
-function KeyHandler(filename)
+function KeyHandler()
   self = {}
+
+  self.pressed = {}
+  self.downtime = {}
 
   self.keys = {}
   self.actions = {}
-  self.filename = filename
 
   self.load = function(self)
-    f=io.open(self.filename)
-    local xmlString = f:read('*a')
-    f:close()
-    local parsedXML = xml.LoadXML(xmlString)
-    local keys = xml.FindAllInXML(parsedXML, 'key')
+    dofile 'keys.lua'
     for _,v in ipairs(keys) do
-      self.keys[v.xarg.key] = v.xarg.action
-      if type(self.actions[v.xarg.action]) == 'table' then
-        table.insert(self.actions[v.xarg.action], v.xarg.key)
+      self.keys[v.key] = v.action
+      self.pressed[v.key] = false
+      self.downtime[v.key] = 0
+      if type(self.actions[v.action]) == 'table' then
+        table.insert(self.actions[v.action], v.key)
       else
-        self.actions[v.xarg.action] = {v.xarg.key}
+        self.actions[v.action] = {v.key}
       end
     end
   end
 
   self:load()
 
-  self.write = function(self)
-    local temp = {keys = {}}
-    for k,v in pairs(self.keys) do
-      table.insert(temp, {key = k, action = v})
+  self.update = function(self, key, state)
+    if self.pressed[key] ~= nil then 
+      self.pressed[key] = state 
+      self.downtime[key] = 0
     end
-    local xmlString = xml.WriteXML(temp)
-    love.filesystem.write(self.filename, xmlString)
+  end
+
+  self.updateTimes = function(self, dt)
+    for k,v in pairs(self.pressed) do
+      if v then 
+        self.downtime[k] = self.downtime[k] + dt
+      end
+    end
+  end
+
+  self.check = function(self, action)
+    local key = self:pressedKey(action)
+    if key then
+      return self.downtime[key]
+    end
+    return nil
+  end
+
+  self.reset = function(self, action)
+    local key = self:pressedKey(action)
+    if key then
+      self.downtime[key] = 0
+    end
+  end
+
+  self.pressedKey = function(self, action)
+    action = self.actions[action]
+    if action then
+      for _,v in ipairs(action) do
+        if self.pressed[v] then
+          return v
+        end
+      end
+    end
+    return nil
   end
 
   return self

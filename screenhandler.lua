@@ -11,8 +11,11 @@ function ScreenHandler()
 
   self.current = 1
 
+  self.keyhandler = nil
+
   self.addScreen = function(self, newScreen)
-    assert(type(newScreen) == 'table' and newScreen.draw and newScreen.update and newScreen.keyhandle, 'Invalid screen')
+    assert(type(newScreen) == 'table' and newScreen.draw and newScreen.update, 'Invalid screen')
+    newScreen.keyhandler = self.keyhandler
     table.insert(self.screens, newScreen)
   end
 
@@ -30,10 +33,6 @@ function ScreenHandler()
 
   self.update = function(self, dt)
     self.screens[self.current]:update(dt)
-  end
-
-  self.keyhandle = function(self, keys, key)
-    self.screens[self.current]:keyhandle(keys, key)
   end
 
   return self
