@@ -1,5 +1,9 @@
 module(..., package.seeall)
 
+-- --
+-- String Addons
+-- --
+
 --
 -- Split a string based on splitchar
 --
@@ -8,6 +12,18 @@ function string.split(word, splitchar)
   word = word..splitchar
   word:gsub('([^'..splitchar..']*)'..splitchar, function(x) table.insert(ret, x) end)
   return ret
+end
+
+
+-- --
+-- Math Addons
+-- --
+
+--
+--
+--
+function math.sign(number)
+  return number > 0 and 1 or number < 0 and -1 or 0
 end
 
 --
@@ -46,6 +62,7 @@ end
 -- Load an image and add a transparency key to it (255,0,255)
 --
 function loadImage(filename, transkey)
+  if not love.filesystem.exists(filename) then filename = 'gfx/'..filename end
   local imageData = love.image.newImageData(filename)
   transkey = transkey or {255,0,255}
   imageData:mapPixel( function(x, y, r, g, b, a) 
@@ -63,6 +80,10 @@ end
 --
 function wrap(number, max) 
   return number > max and number - max or number < 0 and number + max or number
+end
+
+function wrapAng(number)
+  return wrap(number, 360)
 end
 
 --

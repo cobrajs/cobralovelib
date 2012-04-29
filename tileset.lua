@@ -42,10 +42,14 @@ function Tileset(image, xtiles, ytiles)
   --    tileY : Y position of tile to draw
   --
   --
-  self.draw = function(self, x, y, tileX, tileY)
+  self.drawXY = function(self, x, y, tileX, tileY, r, sx, sy, ox, oy)
     local tileNum = tileY and tileY * self.xtiles + tileX + 1 or tileX
+    self:draw(x, y, tileNum, r, sx, sy, ox, oy)
+  end
+
+  self.draw = function(self, x, y, tileNum, r, sx, sy, ox, oy)
     assert(tileNum > 0 and tileNum <= #self.quads, 'Invalid tileNum: ' .. tileNum)
-    love.graphics.drawq(self.image, self.quads[tileNum], x, y)
+    love.graphics.drawq(self.image, self.quads[tileNum], x, y, r, sx, sy, ox, oy)
   end
 
   return self
