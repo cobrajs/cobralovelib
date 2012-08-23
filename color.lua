@@ -4,6 +4,7 @@ local order = {'r','g','b','a'}
 
 function Color(r, g, b, a)
   self = {}
+  self.type = 'color'
 
   self.r = r
   self.g = g
@@ -32,6 +33,32 @@ function Color(r, g, b, a)
     self.rgb[2] = self.g
     self.rgb[3] = self.b
   end
+
+  self.transition = function(self, toColor, percent)
+    percent = percent / 100
+    if toColor.type == self.type then
+      local tempColor = self:clone()
+      for _, c in ipairs({'r', 'g', 'b', 'a'}) do
+        tempColor[c] = (tempColor[c] * (1 - percent) + toColor[c] * percent)
+      end
+      tempColor:update()
+      return tempColor
+    end
+    return self
+  end
+
+  self.fade = function(self, percent)
+    return self:transition(black, percent)
+  end
+
+  self.average = function(self, otherColor)
+    return self:transition(otherColor, 50)
+  end
+
+  self.clone = function(self)
+    return Color(unpack(self.rgba))
+  end
+
   return self
 end
 

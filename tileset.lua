@@ -55,25 +55,11 @@ function Tileset(image, xtiles, ytiles)
   return self
 end
 
-function XMLTileset(xmlsource)
-  local parsedXML = xml.LoadXML(love.filesystem.read(xmlsource))
-  if type(parsedXML) == 'table' then
-    local image = xml.FindInXML(parsedXML, 'image')
-    local anims = xml.FindAllInXML(parsedXML, 'anim')
-    local self = Tileset(image.xarg.source, tonumber(parsedXML[2].xarg.tilesx), tonumber(parsedXML[2].xarg.tilesy))
-    self.anims = {}
-    for i,v in ipairs(anims) do
-      local temp = {
-        start = tonumber(v.xarg.start), 
-        fin = tonumber(v.xarg['end']),
-        len = tonumber(v.xarg['end']) - tonumber(v.xarg.start)
-      }
-      if self.anims[v.xarg.name] then
-        self.anims[v.xarg.name][v.xarg.dir] = temp
-      else
-        self.anims[v.xarg.name] = {[v.xarg.dir] = temp}
-      end
-    end
+function LuaTileset(luasource)
+  local tileset = dofile(luasource)
+  if type(tileset) == 'table' then
+    local self = Tileset(tileset.image.source, tileset.tilesx, tileset.tilesy)
+    self.anims = tileset.anims
     return self
   else
     return nil

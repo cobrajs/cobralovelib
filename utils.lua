@@ -115,3 +115,27 @@ function isIn(table, elem)
   return false
 end
 
+
+--
+-- Adds supers for every function in the class, so that the originals can be overridden
+--
+local prefix = '_'
+function addSupers(classInstance, overrides)
+  local adds = {}
+  if overrides and type(overrides) == 'table' then -- Only override specific ones
+    for _, k in ipairs(overrides) do
+      classInstance[prefix .. k] = classInstance[k]
+    end
+  else -- Override every function
+    for k, v in pairs(classInstance) do
+      if type(v) == 'function' then
+        table.insert(adds, k)
+      end
+    end
+
+    for _, k in ipairs(adds) do
+      classInstance[prefix .. k] = classInstance[k]
+    end
+  end
+end
+
