@@ -93,3 +93,34 @@ function Vector:reflect(w)
   self.x = self.x - w.x
   self.y = self.y - w.y
 end
+
+function Vector:toPolar()
+  m = self:mag()
+  local TOL = 0,001
+  local a = 
+    math.abs(self.y) < TOL and 0 or
+    math.abs(self.x) < TOL and 90 or
+    math.atan(self.y / self.x) * 180 / math.PI
+  a = a + (self.x < 0 and 180 or 0)
+  if a > 360 then a = a - 360 end
+  return {dir = a, mag = m}
+end
+
+function Vector:rotateTo(angle)
+  local pol = self:toPolar()
+  angle = angle * math.PI / 180
+  self.x = math.cos(angle) * m
+  self.y = math.sin(angle) * m
+end
+
+function Vector:rotateBy(angle)
+  local pol = self:toPolar()
+  angle = pol.dir + angle
+  if angle > 360 then angle = angle - 360
+  elseif angle < 0 then angle = angle + 360
+  end
+  angle = angle * math.PI / 180
+  self.x = math.cos(angle) * m
+  self.y = math.sin(angle) * m
+end
+
