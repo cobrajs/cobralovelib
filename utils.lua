@@ -27,6 +27,31 @@ function math.sign(number)
 end
 
 --
+--
+--
+math.lowPrimes = {1, 2, 3, 5, 7}
+function math.nextPrime(start)
+  local found = false
+  local limiter = 20
+  for i,v in ipairs(math.lowPrimes) do if start == v and i < #math.lowPrimes then return math.lowPrimes[i + 1] end end
+  local current = start % 2 == 0 and start + 1 or start + 2
+  local primeCheck = function(num)
+    if num % 3 == 0 or num % 5 == 0 then return false end
+    local start = math.ceil(num / 2)
+    if start % 2 == 0 then start = start - 1 end
+    for i=start, 5, -2 do
+      if num % i == 0 then return false end
+    end
+    return true
+  end
+  while not found do
+    current = current + 2
+    found = primeCheck(current)
+  end
+  return current
+end
+
+--
 -- Convert an RRGGBB format to a table of colors {r=0,g=0,b=0}
 --
 function RGBToTable(colors)
